@@ -1,0 +1,50 @@
+name: build/push Docker Python Image
+
+on:
+  workflow_call:
+    inputs:
+      platforms:
+        required: false
+        default: 'linux/amd64'
+        type: string
+      build_container:
+        required: false
+        default: 'artifacts-we1.farfetch.net/data-docker-stable/farfetch/github-actions-base-docker:2.0.1'
+        type: string
+      docker_build_context:
+        required: false
+        default: '.'
+        type: string
+      docker_image_name:
+        required: false
+        default: ${{ github.event.repository.name }}
+        type: string
+      stable_version:
+        required: false
+        default: '1.0'
+        type: string
+      stable_fixed_version:
+        required: false
+        type: boolean
+      beta_version:
+        required: false
+        default: '1.0'
+        type: string
+
+jobs:
+  build_publish:
+    runs-on: arc-runner-set-linux-shared
+
+    container:
+      image: ${{ inputs.build_container }}
+      credentials:
+        username: ${{ secrets.ARTIFACTORYUSER }}
+        password: ${{ secrets.ARTIFACTORYPASS }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+    
+    steps:
+      - name: echo a string
+        run: Write-Output "Hello World from J.A.R.V.I.S."
